@@ -342,6 +342,83 @@ section{
     box-shadow:0 25px 60px rgba(0,0,0,.35);
 }
 
+.rsvp-box{
+    width:min(760px,100%);
+    margin:10px auto 0;
+    padding:30px 22px;
+    border:1px solid rgba(236,199,137,.58);
+    background:rgba(39,17,10,.58);
+    backdrop-filter:blur(9px);
+    border-radius:24px;
+    box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+.rsvp-title{
+    color:#f0cd93;
+    font-size:clamp(28px,6vw,42px);
+    margin-bottom:10px;
+}
+.rsvp-subtitle{
+    font-family:"Amiri",Georgia,serif;
+    direction:rtl;
+    font-size:clamp(18px,4vw,24px);
+    line-height:1.9;
+    margin-bottom:24px;
+}
+.rsvp-form{
+    display:grid;
+    gap:14px;
+    text-align:right;
+}
+.rsvp-field label{
+    display:block;
+    color:#f2d39c;
+    font-size:15px;
+    margin-bottom:7px;
+}
+.rsvp-field input,.rsvp-field select,.rsvp-field textarea{
+    width:100%;
+    border:1px solid rgba(236,199,137,.48);
+    background:rgba(255,248,235,.10);
+    color:#fff;
+    border-radius:14px;
+    padding:14px 15px;
+    outline:none;
+    font:inherit;
+}
+.rsvp-field input::placeholder,.rsvp-field textarea::placeholder{color:rgba(255,255,255,.65)}
+.rsvp-field select option{color:#24130e;background:#fffaf0}
+.rsvp-field textarea{min-height:95px;resize:vertical}
+.rsvp-submit{
+    border:0;
+    cursor:pointer;
+    min-height:54px;
+    border-radius:30px;
+    color:#fff;
+    background:linear-gradient(135deg,#7c3e23,#b66b32);
+    border:1px solid #e6bf7e;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    font-size:18px;
+    margin-top:5px;
+}
+.rsvp-submit:disabled{opacity:.65;cursor:wait}
+.rsvp-message{
+    display:none;
+    margin-top:16px;
+    padding:13px 15px;
+    border:1px solid rgba(236,199,137,.45);
+    border-radius:14px;
+    background:rgba(39,17,10,.45);
+    color:#f8e4bd;
+    font-family:"Amiri",Georgia,serif;
+    direction:rtl;
+    font-size:19px;
+    line-height:1.8;
+}
+.rsvp-message.show{display:block}
+@media(max-width:600px){
+    .rsvp-box{padding:24px 16px}
+}
+
 </style>
 </head>
 <body>
@@ -361,7 +438,7 @@ section{
     <div class="names">Azzedine <span class="amp">&amp;</span> Yousra</div>
     <div class="verse">﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾</div>
     <div class="invitation-line">تتشرف عائلة غضبان بحضور حنة ابنتهم</div>
-    <div class="invitation-line" style="margin-top:12px;">يسعدنا أن نشارككم فرحتنا وندعوكم لمشاركتنا أجمل لحظات العمر</div>
+    <div class="invitation-line">يسعدنا أن نشارككم فرحة زفافنا وندعوكم لمشاركتنا أجمل لحظات العمر</div>
 </div>
 </section>
 
@@ -475,6 +552,49 @@ section{
 </div>
 </section>
 
+
+<section>
+<div class="content reveal">
+    <div class="ornament">✦ ❖ ✦</div>
+    <div class="rsvp-box">
+        <div class="rsvp-title">CONFIRMATION DE PRÉSENCE</div>
+        <div class="rsvp-subtitle">
+            نرجو تأكيد حضوركم حتى نتمكن من استقبالكم بكل سرور.
+        </div>
+
+        <form id="rsvpForm" class="rsvp-form">
+            <div class="rsvp-field">
+                <label for="nom">الاسم واللقب</label>
+                <input id="nom" name="nom" type="text" placeholder="اكتب اسمك ولقبك" required>
+            </div>
+
+            <div class="rsvp-field">
+                <label for="presence">تأكيد الحضور</label>
+                <select id="presence" name="presence" required>
+                    <option value="" selected disabled>اختر الإجابة</option>
+                    <option value="سأحضر">سأحضر — Présent(e)</option>
+                    <option value="لن أحضر">لن أحضر — Absent(e)</option>
+                </select>
+            </div>
+
+            <div class="rsvp-field">
+                <label for="nombre">عدد الأشخاص</label>
+                <input id="nombre" name="nombre" type="number" min="1" max="20" value="1" required>
+            </div>
+
+            <div class="rsvp-field">
+                <label for="message">رسالة (اختياري)</label>
+                <textarea id="message" name="message" placeholder="رسالة قصيرة للعروسين..."></textarea>
+            </div>
+
+            <button id="rsvpSubmit" class="rsvp-submit" type="submit">تأكيد الحضور</button>
+        </form>
+
+        <div id="rsvpMessage" class="rsvp-message" role="status"></div>
+    </div>
+</div>
+</section>
+
 <section class="final">
 <div class="content reveal">
     <div class="ornament">✦ ❖ ✦</div>
@@ -559,6 +679,62 @@ const observer = new IntersectionObserver(entries => {
 },{threshold:.18});
 
 document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+
+const rsvpForm = document.getElementById("rsvpForm");
+const rsvpMessage = document.getElementById("rsvpMessage");
+const rsvpSubmit = document.getElementById("rsvpSubmit");
+const presence = document.getElementById("presence");
+const nombre = document.getElementById("nombre");
+
+presence.addEventListener("change", () => {
+    if (presence.value === "لن أحضر") {
+        nombre.value = "0";
+        nombre.disabled = true;
+        nombre.required = false;
+    } else {
+        nombre.disabled = false;
+        nombre.required = true;
+        if (nombre.value === "0") nombre.value = "1";
+    }
+});
+
+rsvpForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    rsvpSubmit.disabled = true;
+    rsvpSubmit.textContent = "جاري الإرسال...";
+    rsvpMessage.classList.remove("show");
+
+    const data = new URLSearchParams();
+    data.append("nom", document.getElementById("nom").value.trim());
+    data.append("presence", presence.value);
+    data.append("nombre", nombre.value);
+    data.append("message", document.getElementById("message").value.trim());
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzLRAPI48p2i63hZTo38C9vybWUt3jCEjpiGKnCidXjQBGKShiz_TRQxZdcBtB3tCXv/exec";
+
+    try {
+        await fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            body: data
+        });
+
+        rsvpMessage.textContent = "تم إرسال تأكيد حضوركم بنجاح، شكرًا لكم ❤️";
+        rsvpMessage.classList.add("show");
+        rsvpForm.reset();
+        nombre.disabled = false;
+        nombre.required = true;
+        nombre.value = "1";
+    } catch (error) {
+        rsvpMessage.textContent = "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.";
+        rsvpMessage.classList.add("show");
+    } finally {
+        rsvpSubmit.disabled = false;
+        rsvpSubmit.textContent = "تأكيد الحضور";
+    }
+});
 </script>
 </body>
 </html>
